@@ -1,0 +1,30 @@
+[package]
+build = "build.rs"
+name = "clipboard_turbo"
+version = "0.1.1"
+edition = "2021"
+authors = ["lers"]
+description = "粘贴板功能增强"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+md-5 = { version = "0.11.0-pre.4" }
+thiserror = { version = "1.0.63" }
+lazy_static = { version = "1.5.0" }
+clipboard-win = { version = "5.4.0" }
+rdev = { version = "0.5.3" }
+eframe = { version = "0.28.1" }
+egui = { version = "0.28.1" }
+tokio = { version = "1.39.2", features = ["full"] }
+image = { version = "0.24" }
+winapi = "0.3.9"
+egui_extras = { version = "0.28.1" }
+
+[build-dependencies]
+embed-resource = { version = "2.4.3" }
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
