@@ -10,19 +10,18 @@ description = "粘贴板功能增强"
 
 [dependencies]
 md-5 = { version = "0.11.0-pre.4" }
-thiserror = { version = "1.0.63" }
 lazy_static = { version = "1.5.0" }
 clipboard-win = { version = "5.4.0" }
 rdev = { version = "0.5.3" }
-eframe = { version = "0.28.1" }
-egui = { version = "0.28.1" }
+eframe = { version = "0.29.1" }
+egui = { version = "0.29.1" }
 tokio = { version = "1.39.2", features = ["full"] }
-image = { version = "0.24" }
+image = { version = "0.25.5" }
 winapi = "0.3.9"
-egui_extras = { version = "0.28.1" }
+egui_extras = { version = "0.29.1" }
 
 [build-dependencies]
-embed-resource = { version = "2.4.3" }
+embed-resource = { version = "3.0.1" }
 
 [profile.release]
 opt-level = "z"

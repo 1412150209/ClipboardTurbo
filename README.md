@@ -14,7 +14,6 @@ ClipboardTurbo是一个简单的队列粘贴板软件，通过监听系统粘贴
 # 技术栈
 
 - Rust
-- Tauri
 - egui
 
 ## 功能展示

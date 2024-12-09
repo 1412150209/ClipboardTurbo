@@ -6,7 +6,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use clipboard_win::formats;
 use eframe::CreationContext;
 use eframe::epaint::text::TextWrapMode;
-use egui::{Align, Align2, Context, FontData, FontId, Id, Key, Layout, ScrollArea, Sense, vec2, ViewportCommand, Visuals};
+use egui::{Align, Align2, Context, FontData, FontId, Id, Key, Layout, ScrollArea, Sense, UiBuilder, vec2, ViewportCommand, Visuals};
 use egui::PointerButton;
 use egui::WindowLevel::{AlwaysOnTop, Normal};
 
@@ -69,21 +69,20 @@ impl eframe::App for MyApp {
         // }
         // 主窗口
         custom_window_frame(ctx, "队列粘贴板", |ui| {
-            ui.horizontal(|ui| {
-                ui.label("队列粘贴板启用:");
+            ui.horizontal_wrapped(|ui| {
+                ui.label("开关:");
                 if ui.checkbox(&mut CLIPBOARD_ENABLED.load(Ordering::Relaxed), "").clicked() {
                     CLIPBOARD_ENABLED.store(!CLIPBOARD_ENABLED.load(Ordering::Relaxed), Ordering::Relaxed);
                     ctx.request_repaint();
                 }
                 ui.label("|");
-                ui.label("清空队列：");
+                ui.label("清空：");
                 if ui.button("🔃").clicked() {
                     CLIPBOARD_QUEUE.lock().unwrap().clear();
                     ctx.request_repaint();
                 }
-            });
-            ui.horizontal(|ui| {
-                ui.label("置顶窗口：");
+                ui.label("|");
+                ui.label("置顶：");
                 if ui.checkbox(&mut self.on_top.load(Ordering::Relaxed), "").clicked() {
                     // 置顶窗口
                     self.on_top.store(!self.on_top.load(Ordering::Relaxed), Ordering::Relaxed);
@@ -94,8 +93,10 @@ impl eframe::App for MyApp {
                     }
                     ctx.request_repaint();
                 }
-                ui.label("|");
-                egui::widgets::global_dark_light_mode_buttons(ui);
+            });
+            ui.horizontal(|ui| {
+                ui.label("主题:");
+                egui::widgets::global_theme_preference_buttons(ui);
             });
             ui.separator();
             // 粘贴板内容
@@ -140,7 +141,8 @@ fn custom_window_frame(ctx: &Context, title: &str, add_contents: impl FnOnce(&mu
             rect
         }
             .shrink(4.0);
-        let mut content_ui = ui.child_ui(content_rect, *ui.layout(), None);
+        let ui_builder = UiBuilder::new();
+        let mut content_ui = ui.new_child(ui_builder.max_rect(content_rect).layout(*ui.layout()));
         add_contents(&mut content_ui);
     });
 }
@@ -176,7 +178,9 @@ fn title_bar_ui(ui: &mut egui::Ui, title_bar_rect: eframe::epaint::Rect, title: 
         ui.ctx().send_viewport_cmd(ViewportCommand::StartDrag);
     }
 
-    ui.allocate_ui_at_rect(title_bar_rect, |ui| {
+    let ui_builder = UiBuilder::new();
+
+    ui.allocate_new_ui(ui_builder.max_rect(title_bar_rect), |ui| {
         ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
             ui.spacing_mut().item_spacing.x = 1.0;
             ui.visuals_mut().button_frame = false;
